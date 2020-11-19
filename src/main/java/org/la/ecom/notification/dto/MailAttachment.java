@@ -16,7 +16,7 @@ public class MailAttachment  implements Serializable {
 	
 	public MailAttachment() {}
 	
-	public MailAttachment(String fileName, byte[] file, String mimeType) {
+	public MailAttachment(byte[] file, String mimeType, String fileName) {
 		this.fileName=fileName;
 		this.file=file;
 		this.mimeType = mimeType;

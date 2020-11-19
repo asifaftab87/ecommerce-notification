@@ -7,6 +7,7 @@ import org.dozer.DozerBeanMapper;
 import org.la.ecom.document.api.client.DocumentClient;
 import org.la.ecom.mysql.api.client.MysqlClient;
 import org.la.ecom.notification.rest.template.interceptor.RestTemplateInterceptor;
+import org.la.ecom.report.api.client.ReportClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +45,11 @@ public class AppNotificationConfiguration {
 	@Bean
 	public DocumentClient documentClient() {
 		return new DocumentClient();
+	}
+	
+	@Bean
+	public ReportClient reportClient() {
+		return new ReportClient();
 	}
 	
 	@Bean

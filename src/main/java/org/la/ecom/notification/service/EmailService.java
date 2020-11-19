@@ -1,7 +1,10 @@
 package org.la.ecom.notification.service;
 
+import javax.activation.DataHandler;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.la.ecom.notification.dto.Mail;
 import org.la.ecom.notification.dto.MailAttachment;
@@ -17,27 +20,33 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
 	@Autowired
-    private JavaMailSender emailSender;
+	private JavaMailSender emailSender;
 
-    public void sendSimpleMessage(Mail mail) throws MessagingException {
+	public void sendSimpleMessage(Mail mail) throws MessagingException {
 
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setSubject(mail.getSubject());
-        helper.setText(mail.getBodyContent());
-        helper.setTo(mail.getTo());
-        helper.setFrom(mail.getTo());
+		helper.setSubject(mail.getSubject());
+		helper.setText(mail.getBodyContent());
+		helper.setTo(mail.getTo());
+		helper.setFrom(mail.getTo());
 
-        MailAttachment mailAttachment = mail.getMailAttachment();
-        
-        if(mailAttachment!=null && mailAttachment.getFile()!=null) {
-        	final InputStreamSource attachmentSource = new ByteArrayResource(mailAttachment.getFile());
-        	 helper.addAttachment(mailAttachment.getFileName(), attachmentSource, mailAttachment.getMimeType());
-        }
-        helper.addAttachment("entry_exit.jpg", new ClassPathResource("/static/entry_exit.jpg"));
-       
-        emailSender.send(message);
+		MailAttachment mailAttachment = mail.getMailAttachment();
 
-    }
+		if (mailAttachment != null && mailAttachment.getFile() != null) {
+			MimeBodyPart att = new MimeBodyPart();
+			ByteArrayDataSource bds = new ByteArrayDataSource(mailAttachment.getFile(), "AttName");
+			att.setDataHandler(new DataHandler(bds));
+			att.setFileName(bds.getName());
+			final InputStreamSource attachmentSource = new ByteArrayResource(mailAttachment.getFile());
+			helper.addAttachment(mailAttachment.getFileName(), attachmentSource);
+			//helper.
+		} else {
+			helper.addAttachment("entry_exit.jpg", new ClassPathResource("/static/entry_exit.jpg"));
+		}
+
+		emailSender.send(message);
+
+	}
 }
