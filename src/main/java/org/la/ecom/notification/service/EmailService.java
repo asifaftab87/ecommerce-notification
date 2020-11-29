@@ -28,21 +28,18 @@ public class EmailService {
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 		helper.setSubject(mail.getSubject());
-		helper.setText(mail.getBodyContent());
+		helper.setText(mail.getBodyContent(), true);
 		helper.setTo(mail.getTo());
 		helper.setFrom(mail.getTo());
 
 		MailAttachment mailAttachment = mail.getMailAttachment();
 
 		if (mailAttachment != null && mailAttachment.getFile() != null) {
-			MimeBodyPart att = new MimeBodyPart();
-			ByteArrayDataSource bds = new ByteArrayDataSource(mailAttachment.getFile(), "AttName");
-			att.setDataHandler(new DataHandler(bds));
-			att.setFileName(bds.getName());
-			final InputStreamSource attachmentSource = new ByteArrayResource(mailAttachment.getFile());
-			helper.addAttachment(mailAttachment.getFileName(), attachmentSource);
-			//helper.
+			
+			 ByteArrayDataSource byteArrayDataSource = new ByteArrayDataSource(mailAttachment.getFile(), "application/pdf");
+			 helper.addAttachment(mailAttachment.getFileName()+".pdf", byteArrayDataSource);
 		} else {
+			
 			helper.addAttachment("entry_exit.jpg", new ClassPathResource("/static/entry_exit.jpg"));
 		}
 

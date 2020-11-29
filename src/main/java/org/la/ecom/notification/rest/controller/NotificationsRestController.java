@@ -60,6 +60,7 @@ public class NotificationsRestController {
 		for(UserDTO userDto : userList) {
 			
 			ReportDTO reportDTO = get(userDto);
+			
 			MailAttachmentDTO mailAttachment = new MailAttachmentDTO(reportDTO.getContent(), reportDTO.getMimeType(), reportDTO.getName());
 			mailDto.setTo(userDto.getEmail());
 			mailDto.setMailAttachment(mailAttachment);
